@@ -1,0 +1,92 @@
+.back_to_top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #FF0137 0%, #06090A 100%);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 40px rgba(255, 1, 55, 0.3);
+}
+
+.back_to_top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back_to_top::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff1a4a 0%, #1a1a1a 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.back_to_top:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 60px rgba(255, 1, 55, 0.5);
+}
+
+.back_to_top:hover::before {
+  opacity: 1;
+}
+
+.back_to_top svg {
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.back_to_top:hover svg {
+  transform: translateY(-3px);
+}
+
+.back_to_top_ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: rgba(255, 1, 55, 0.5);
+  animation: spin-ring 2s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.back_to_top:hover .back_to_top_ring {
+  opacity: 1;
+}
+
+@keyframes spin-ring {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .back_to_top {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 44px;
+    height: 44px;
+  }
+  
+  .back_to_top svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+

@@ -1,0 +1,318 @@
+.section_hero_home {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 100px;
+  overflow: hidden;
+}
+
+.hero_bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero_bg_gradient {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140%;
+  height: 80%;
+  background: radial-gradient(ellipse at center, var(--color-glow, rgba(255, 1, 55, 0.15)) 0%, rgba(255, 1, 55, 0.05) 40%, transparent 70%);
+  pointer-events: none;
+  animation: pulse-slow 8s ease-in-out infinite;
+}
+
+.hero_bg_lines {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+}
+
+/* Robot 3D models replaced the orbs */
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+  50% { opacity: 0.7; transform: translateX(-50%) scale(1.1); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -30px); }
+  50% { transform: translate(-20px, 20px); }
+  75% { transform: translate(20px, 30px); }
+}
+
+.hero_home_content_wrapper {
+  position: relative;
+  z-index: 2;
+}
+
+.hero_home_content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.home_hero_text {
+  max-width: 1000px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.home_hero_text.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero_title {
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 2.5rem;
+}
+
+.hero_title span {
+  display: inline;
+}
+
+.hero_title .text-glow-red {
+  color: var(--color-primary, #FF0137);
+  text-shadow: 0 0 80px var(--color-glow, rgba(255, 1, 55, 0.6)), 0 0 160px rgba(255, 1, 55, 0.3);
+  background: linear-gradient(135deg, var(--color-primary, #FF0137) 0%, var(--color-primary-hover, #ff6b6b) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero_subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: #9CA3AF;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  line-height: 1.7;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+}
+
+.hero_subtitle.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero_button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.125rem 2.25rem;
+  background: var(--gradient-primary, linear-gradient(135deg, var(--color-primary, #FF0137) 0%, #06090A 100%));
+  border-radius: 0.625rem;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.hero_button.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease 0.4s, transform 1s ease 0.4s;
+}
+
+.hero_button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-primary-hover, linear-gradient(135deg, var(--color-primary-hover, #ff1a4a) 0%, #1a1a1a 100%));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hero_button span {
+  position: relative;
+  z-index: 1;
+}
+
+.hero_button svg {
+  position: relative;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.hero_button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 80px var(--color-glow, rgba(255, 1, 55, 0.5)), 0 0 60px rgba(255, 1, 55, 0.3);
+}
+
+.hero_button:hover::before {
+  opacity: 1;
+}
+
+.hero_button:hover svg {
+  transform: translateX(4px);
+}
+
+.hero_scroll_indicator {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  animation: fadeIn 1s ease 1.5s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 0.5; }
+}
+
+.scroll_mouse {
+  width: 24px;
+  height: 40px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  position: relative;
+}
+
+.scroll_wheel {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+  animation: scroll-bounce 2s ease-in-out infinite;
+}
+
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  50% { transform: translateX(-50%) translateY(10px); opacity: 0.3; }
+}
+
+.scroll_text {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 991px) {
+  .hero_home_content {
+    padding: 3rem 0;
+  }
+  
+  .hero_orb_1 {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .hero_orb_2 {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section_hero_home {
+    min-height: auto;
+    padding-top: 100px;
+    padding-bottom: 60px;
+  }
+  
+  .hero_home_content {
+    padding: 2rem 0;
+  }
+  
+  .hero_title {
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero_subtitle {
+    margin-bottom: 2rem;
+  }
+  
+  .hero_button {
+    padding: 1rem 2rem;
+    font-size: 0.9375rem;
+  }
+  
+  .hero_scroll_indicator {
+    display: none;
+  }
+  
+  .hero_orb_1 {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .hero_orb_2 {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media (max-width: 479px) {
+  .section_hero_home {
+    padding-top: 80px;
+    padding-bottom: 40px;
+  }
+  
+  .hero_home_content {
+    padding: 1.5rem 0;
+  }
+  
+  .hero_title {
+    margin-bottom: 1rem;
+  }
+  
+  .hero_subtitle {
+    margin-bottom: 1.5rem;
+    font-size: 0.9375rem;
+  }
+  
+  .hero_button {
+    padding: 0.875rem 1.75rem;
+    font-size: 0.875rem;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .hero_orb_1 {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .hero_orb_2 {
+    width: 150px;
+    height: 150px;
+  }
+}
+

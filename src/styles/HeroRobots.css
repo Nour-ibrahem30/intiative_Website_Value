@@ -1,0 +1,131 @@
+.hero_robots_container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero_robot_wrapper {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 40px var(--color-primary, #FF0137));
+  animation: float-robot 20s ease-in-out infinite;
+  z-index: 1;
+}
+
+.hero_robot_1 {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.hero_robot_2 {
+  bottom: 20%;
+  right: 10%;
+  width: 400px;
+  height: 400px;
+  animation-delay: -10s;
+}
+
+.hero_robot_canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@keyframes float-robot {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+  }
+  25% { 
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  50% { 
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  75% { 
+    transform: translate(20px, 30px) scale(1.05);
+  }
+}
+
+/* Glow effect */
+.hero_robot_wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -80px;
+  background: radial-gradient(circle, var(--color-primary, #FF0137) 0%, transparent 70%);
+  opacity: 0.4;
+  filter: blur(60px);
+  animation: pulse-glow 4s ease-in-out infinite;
+  z-index: -1;
+}
+
+.hero_robot_wrapper::after {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  background: radial-gradient(circle, var(--color-primary, #FF0137) 0%, transparent 60%);
+  opacity: 0.2;
+  filter: blur(30px);
+  animation: pulse-glow 3s ease-in-out infinite reverse;
+  z-index: -1;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+@media (max-width: 991px) {
+  .hero_robot_wrapper {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .hero_robot_2 {
+    width: 250px;
+    height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero_robot_wrapper {
+    width: 150px;
+    height: 150px;
+    opacity: 0.4;
+  }
+  
+  .hero_robot_1 {
+    top: 15%;
+    left: 5%;
+  }
+  
+  .hero_robot_2 {
+    bottom: 15%;
+    right: 5%;
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media (max-width: 479px) {
+  .hero_robot_wrapper {
+    width: 100px;
+    height: 100px;
+    opacity: 0.3;
+  }
+  
+  .hero_robot_2 {
+    width: 150px;
+    height: 150px;
+  }
+}
+

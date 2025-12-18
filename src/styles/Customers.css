@@ -1,0 +1,159 @@
+.section_customers {
+  padding: 8rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.customers_wrapper {
+  text-align: center;
+}
+
+.customers_title {
+  margin-bottom: 3rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.customers_title.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.customers_title h2 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 600;
+}
+
+.blurred_logos {
+  position: relative;
+  height: 120px;
+  margin-bottom: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+}
+
+.blurred_logos.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.blurred_logos_bg {
+  width: 100%;
+  max-width: 700px;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.02) 0%, 
+    rgba(255, 255, 255, 0.08) 50%, 
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.blurred_logos_bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.logos_grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  padding: 2rem;
+  align-items: center;
+}
+
+.logo_item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.4;
+  filter: grayscale(100%);
+  transition: all 0.3s ease;
+}
+
+.logo_item:hover {
+  opacity: 0.8;
+  filter: grayscale(0%);
+  transform: scale(1.1);
+}
+
+.logo_item img {
+  max-width: 100%;
+  height: auto;
+  max-height: 40px;
+  object-fit: contain;
+}
+
+@media (max-width: 991px) {
+  .section_customers {
+    padding: 6rem 0;
+  }
+  
+  .logos_grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section_customers {
+    padding: 4rem 0;
+  }
+  
+  .customers_title {
+    margin-bottom: 2rem;
+  }
+  
+  .blurred_logos {
+    height: 100px;
+    margin-bottom: 3rem;
+  }
+  
+  .logos_grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .logo_item img {
+    max-height: 35px;
+  }
+}
+
+@media (max-width: 479px) {
+  .section_customers {
+    padding: 3rem 0;
+  }
+  
+  .blurred_logos {
+    height: 80px;
+    margin-bottom: 2rem;
+  }
+  
+  .logos_grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  
+  .logo_item img {
+    max-height: 30px;
+  }
+}
