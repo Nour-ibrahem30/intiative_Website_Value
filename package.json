@@ -5,8 +5,8 @@
   "main": "attributes.js",
   "scripts": {
     "dev": "vite --port 5173",
-    "build": "vite build",
-    "preview": "vite preview",
+    "build": "node ./node_modules/vite/bin/vite.js build",
+    "preview": "node ./node_modules/vite/bin/vite.js preview",
     "start": "vite --port 3000"
   },
   "keywords": [],
