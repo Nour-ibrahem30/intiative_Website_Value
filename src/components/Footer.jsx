@@ -1,6 +1,104 @@
+import { useState } from 'react';
 import '../styles/Footer.css';
 
 export default function Footer({ onApplyClick }) {
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [submitStatus, setSubmitStatus] = useState('idle');
+  const [submitError, setSubmitError] = useState('');
+
+  const saveLeadLocal = (lead) => {
+    const storageKey = 'initiative_value_leads';
+    try {
+      const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      const safeExisting = Array.isArray(existing) ? existing : [];
+      safeExisting.push(lead);
+      localStorage.setItem(storageKey, JSON.stringify(safeExisting));
+    } catch {
+      localStorage.setItem(storageKey, JSON.stringify([lead]));
+    }
+  };
+
+  const exportLeadsCsv = () => {
+    const storageKey = 'initiative_value_leads';
+    const leads = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    const rows = Array.isArray(leads) ? leads : [];
+
+    const headers = ['type', 'name', 'email', 'phone', 'company', 'message', 'pageUrl', 'createdAt'];
+    const escape = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`;
+
+    const csv = [
+      headers.join(','),
+      ...rows.map((row) => headers.map((h) => escape(row?.[h])).join(','))
+    ].join('\r\n');
+
+    const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `initiative-value-leads-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (submitStatus === 'submitting') return;
+
+    const endpoint = import.meta.env.VITE_LEADS_ENDPOINT || '/api/leads';
+
+    setSubmitStatus('submitting');
+    setSubmitError('');
+
+    const payload = {
+      type: 'contact',
+      name: form.name.trim(),
+      email: form.email.trim(),
+      message: form.message.trim(),
+      pageUrl: window.location.href,
+      createdAt: new Date().toISOString()
+    };
+
+    const fallbackMailto = () => {
+      const subject = encodeURIComponent('New message from Initiative Value website');
+      const body = encodeURIComponent(
+        `Name: ${payload.name}\nEmail: ${payload.email}\n\n${payload.message}`.trim()
+      );
+
+      window.location.href = `mailto:contact@initiativevalue.com?subject=${subject}&body=${body}`;
+    };
+
+    const submit = async () => {
+      try {
+        if (endpoint) {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) throw new Error('Request failed');
+
+          saveLeadLocal(payload);
+          setForm({ name: '', email: '', message: '' });
+          setSubmitStatus('success');
+          return;
+        }
+
+        fallbackMailto();
+        saveLeadLocal(payload);
+        setSubmitStatus('success');
+      } catch {
+        setSubmitStatus('error');
+        setSubmitError('حصلت مشكلة أثناء الإرسال. جرّب تاني أو ابعت على الإيميل مباشرة.');
+      }
+    };
+
+    void submit();
+  };
+
   return (
     <footer className="footer" id="contact">
       <div className="padding-global">
@@ -24,7 +122,7 @@ export default function Footer({ onApplyClick }) {
               reach new customers, build brand loyalty, and achieve sustainable growth.
             </p>
             <div className="footer_cta_buttons">
-              <a href="mailto:contact@initiativevalue.com" className="footer_btn secondary">
+              <a href="#contact-form" className="footer_btn secondary">
                 <span>Contact Us</span>
               </a>
               <button 
@@ -37,6 +135,81 @@ export default function Footer({ onApplyClick }) {
                 </svg>
               </button>
             </div>
+
+            <form id="contact-form" className="footer_contact_form" onSubmit={handleSubmit}>
+              <div className="footer_form_grid">
+                <label className="footer_field">
+                  <span className="footer_label">Name</span>
+                  <input
+                    className="footer_input"
+                    type="text"
+                    value={form.name}
+                    onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+                    placeholder="Your name"
+                    required
+                    autoComplete="name"
+                    disabled={submitStatus === 'submitting'}
+                  />
+                </label>
+
+                <label className="footer_field">
+                  <span className="footer_label">Email</span>
+                  <input
+                    className="footer_input"
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
+                    placeholder="you@company.com"
+                    required
+                    autoComplete="email"
+                    disabled={submitStatus === 'submitting'}
+                  />
+                </label>
+              </div>
+
+              <label className="footer_field footer_field_full">
+                <span className="footer_label">Message</span>
+                <textarea
+                  className="footer_input footer_textarea"
+                  value={form.message}
+                  onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))}
+                  placeholder="Tell us about your goals…"
+                  required
+                  rows={5}
+                  disabled={submitStatus === 'submitting'}
+                />
+              </label>
+
+              {submitStatus !== 'idle' && (
+                <div
+                  className={`footer_notice ${
+                    submitStatus === 'success' ? 'success' : submitStatus === 'error' ? 'error' : ''
+                  }`}
+                  aria-live="polite"
+                >
+                  {submitStatus === 'submitting' && 'Sending…'}
+                  {submitStatus === 'success' && 'تم الإرسال بنجاح. هنتواصل معاك قريباً.'}
+                  {submitStatus === 'error' && submitError}
+                </div>
+              )}
+
+              <div className="footer_form_actions">
+                <button type="submit" className="footer_btn primary" disabled={submitStatus === 'submitting'}>
+                  <span>{submitStatus === 'submitting' ? 'Sending…' : 'Send Message'}</span>
+                  <svg viewBox="0 0 20 20" fill="none">
+                    <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+
+                <a href="mailto:contact@initiativevalue.com" className="footer_btn secondary">
+                  <span>contact@initiativevalue.com</span>
+                </a>
+
+                <button type="button" className="footer_btn secondary" onClick={exportLeadsCsv}>
+                  <span>Export Excel (CSV)</span>
+                </button>
+              </div>
+            </form>
           </div>
           
           <div className="footer_links">

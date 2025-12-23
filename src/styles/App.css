@@ -50,6 +50,22 @@ body {
   overflow-x: hidden;
 }
 
+body.nav-locked {
+  overflow: hidden;
+}
+
+body.modal-locked {
+  overflow: hidden;
+}
+
+#section-features,
+#section-lantern,
+#section-faq,
+#contact,
+#contact-form {
+  scroll-margin-top: 96px;
+}
+
 #root {
   display: flex;
   flex-direction: column;
@@ -65,6 +81,11 @@ a {
 
 a:hover {
   opacity: 0.8;
+}
+
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 4px;
 }
 
 button {

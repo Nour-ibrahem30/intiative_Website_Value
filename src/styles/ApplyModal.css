@@ -144,6 +144,35 @@
   min-height: 100px;
 }
 
+.form_notice {
+  margin: 0.75rem 0 0;
+  padding: 0.9rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.form_notice.success {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.form_notice.error {
+  border-color: rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.modal_close:focus-visible,
+.form_submit:focus-visible,
+.form_group input:focus-visible,
+.form_group textarea:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 4px;
+}
+
 .form_submit {
   width: 100%;
   padding: 1rem 2rem;

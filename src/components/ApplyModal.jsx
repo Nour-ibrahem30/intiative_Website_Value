@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/ApplyModal.css';
 
 export default function ApplyModal({ isOpen, onClose }) {
@@ -11,6 +11,36 @@ export default function ApplyModal({ isOpen, onClose }) {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState('idle');
+  const [submitError, setSubmitError] = useState('');
+
+  const saveLeadLocal = (lead) => {
+    const storageKey = 'initiative_value_leads';
+    try {
+      const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      const safeExisting = Array.isArray(existing) ? existing : [];
+      safeExisting.push(lead);
+      localStorage.setItem(storageKey, JSON.stringify(safeExisting));
+    } catch {
+      localStorage.setItem(storageKey, JSON.stringify([lead]));
+    }
+  };
+
+  useEffect(() => {
+    document.body.classList.toggle('modal-locked', isOpen);
+    return () => document.body.classList.remove('modal-locked');
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') onClose?.();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,13 +51,48 @@ export default function ApplyModal({ isOpen, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     setIsSubmitting(true);
+    setSubmitStatus('submitting');
+    setSubmitError('');
     
-    // Simulate form submission
-    setTimeout(() => {
-      console.log('Form submitted:', formData);
-      setIsSubmitting(false);
-      alert('Thank you! We will contact you soon.');
+    const endpoint = import.meta.env.VITE_LEADS_ENDPOINT || '/api/leads';
+
+    const payload = {
+      type: 'apply',
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      company: formData.company.trim(),
+      message: formData.message.trim(),
+      pageUrl: window.location.href,
+      createdAt: new Date().toISOString()
+    };
+
+    const fallbackMailto = () => {
+      const subject = encodeURIComponent('New application from Initiative Value website');
+      const body = encodeURIComponent(
+        `Name: ${payload.name}\nEmail: ${payload.email}\nPhone: ${payload.phone}\nCompany: ${payload.company}\n\n${payload.message}`.trim()
+      );
+
+      window.location.href = `mailto:contact@initiativevalue.com?subject=${subject}&body=${body}`;
+    };
+
+    try {
+      if (endpoint) {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) throw new Error('Request failed');
+      } else {
+        fallbackMailto();
+      }
+
+      saveLeadLocal(payload);
+      setSubmitStatus('success');
       setFormData({
         name: '',
         email: '',
@@ -35,8 +100,17 @@ export default function ApplyModal({ isOpen, onClose }) {
         company: '',
         message: ''
       });
-      onClose();
-    }, 1000);
+
+      setTimeout(() => {
+        setSubmitStatus('idle');
+        onClose?.();
+      }, 1200);
+    } catch {
+      setSubmitStatus('error');
+      setSubmitError('حصلت مشكلة أثناء الإرسال. جرّب تاني أو ابعت على الإيميل مباشرة.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -66,6 +140,7 @@ export default function ApplyModal({ isOpen, onClose }) {
               onChange={handleChange}
               required
               placeholder="Enter your full name"
+              disabled={isSubmitting}
             />
           </div>
 
@@ -79,6 +154,7 @@ export default function ApplyModal({ isOpen, onClose }) {
               onChange={handleChange}
               required
               placeholder="your.email@example.com"
+              disabled={isSubmitting}
             />
           </div>
 
@@ -91,6 +167,7 @@ export default function ApplyModal({ isOpen, onClose }) {
               value={formData.phone}
               onChange={handleChange}
               placeholder="+1 (555) 000-0000"
+              disabled={isSubmitting}
             />
           </div>
 
@@ -103,6 +180,7 @@ export default function ApplyModal({ isOpen, onClose }) {
               value={formData.company}
               onChange={handleChange}
               placeholder="Your company name"
+              disabled={isSubmitting}
             />
           </div>
 
@@ -115,8 +193,22 @@ export default function ApplyModal({ isOpen, onClose }) {
               onChange={handleChange}
               rows="4"
               placeholder="Tell us about your marketing needs..."
+              disabled={isSubmitting}
             ></textarea>
           </div>
+
+          {submitStatus !== 'idle' && (
+            <div
+              className={`form_notice ${
+                submitStatus === 'success' ? 'success' : submitStatus === 'error' ? 'error' : ''
+              }`}
+              aria-live="polite"
+            >
+              {submitStatus === 'submitting' && 'Submitting…'}
+              {submitStatus === 'success' && 'تم الإرسال بنجاح. هنتواصل معاك قريباً.'}
+              {submitStatus === 'error' && submitError}
+            </div>
+          )}
 
           <button type="submit" className="form_submit" disabled={isSubmitting}>
             {isSubmitting ? (
@@ -138,4 +230,3 @@ export default function ApplyModal({ isOpen, onClose }) {
     </div>
   );
 }
-
