@@ -4,10 +4,12 @@
   "description": "Local setup to view `mokn_index.html`",
   "main": "attributes.js",
   "scripts": {
-    "dev": "vite --port 5173",
+    "dev": "node server/dev.mjs",
+    "dev:vite": "vite --port 5173",
     "build": "node ./node_modules/vite/bin/vite.js build",
     "preview": "node ./node_modules/vite/bin/vite.js preview",
-    "start": "vite --port 3000",
+    "start": "node server/leads-server.mjs --serve-dist --port 3000",
+    "start:vite": "vite --port 3000",
     "leads:server": "node server/leads-server.mjs --port 8787",
     "serve:full": "node server/leads-server.mjs --serve-dist --port 3000"
   },

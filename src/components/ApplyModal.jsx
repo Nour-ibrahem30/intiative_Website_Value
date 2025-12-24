@@ -14,18 +14,6 @@ export default function ApplyModal({ isOpen, onClose }) {
   const [submitStatus, setSubmitStatus] = useState('idle');
   const [submitError, setSubmitError] = useState('');
 
-  const saveLeadLocal = (lead) => {
-    const storageKey = 'initiative_value_leads';
-    try {
-      const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
-      const safeExisting = Array.isArray(existing) ? existing : [];
-      safeExisting.push(lead);
-      localStorage.setItem(storageKey, JSON.stringify(safeExisting));
-    } catch {
-      localStorage.setItem(storageKey, JSON.stringify([lead]));
-    }
-  };
-
   useEffect(() => {
     document.body.classList.toggle('modal-locked', isOpen);
     return () => document.body.classList.remove('modal-locked');
@@ -91,7 +79,6 @@ export default function ApplyModal({ isOpen, onClose }) {
         fallbackMailto();
       }
 
-      saveLeadLocal(payload);
       setSubmitStatus('success');
       setFormData({
         name: '',

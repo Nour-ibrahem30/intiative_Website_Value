@@ -6,43 +6,6 @@ export default function Footer({ onApplyClick }) {
   const [submitStatus, setSubmitStatus] = useState('idle');
   const [submitError, setSubmitError] = useState('');
 
-  const saveLeadLocal = (lead) => {
-    const storageKey = 'initiative_value_leads';
-    try {
-      const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
-      const safeExisting = Array.isArray(existing) ? existing : [];
-      safeExisting.push(lead);
-      localStorage.setItem(storageKey, JSON.stringify(safeExisting));
-    } catch {
-      localStorage.setItem(storageKey, JSON.stringify([lead]));
-    }
-  };
-
-  const exportLeadsCsv = () => {
-    const storageKey = 'initiative_value_leads';
-    const leads = JSON.parse(localStorage.getItem(storageKey) || '[]');
-    const rows = Array.isArray(leads) ? leads : [];
-
-    const headers = ['type', 'name', 'email', 'phone', 'company', 'message', 'pageUrl', 'createdAt'];
-    const escape = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`;
-
-    const csv = [
-      headers.join(','),
-      ...rows.map((row) => headers.map((h) => escape(row?.[h])).join(','))
-    ].join('\r\n');
-
-    const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `initiative-value-leads-${new Date().toISOString().slice(0, 10)}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
     if (submitStatus === 'submitting') return;
@@ -61,34 +24,17 @@ export default function Footer({ onApplyClick }) {
       createdAt: new Date().toISOString()
     };
 
-    const fallbackMailto = () => {
-      const subject = encodeURIComponent('New message from Initiative Value website');
-      const body = encodeURIComponent(
-        `Name: ${payload.name}\nEmail: ${payload.email}\n\n${payload.message}`.trim()
-      );
-
-      window.location.href = `mailto:contact@initiativevalue.com?subject=${subject}&body=${body}`;
-    };
-
     const submit = async () => {
       try {
-        if (endpoint) {
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
 
-          if (!response.ok) throw new Error('Request failed');
+        if (!response.ok) throw new Error('Request failed');
 
-          saveLeadLocal(payload);
-          setForm({ name: '', email: '', message: '' });
-          setSubmitStatus('success');
-          return;
-        }
-
-        fallbackMailto();
-        saveLeadLocal(payload);
+        setForm({ name: '', email: '', message: '' });
         setSubmitStatus('success');
       } catch {
         setSubmitStatus('error');
@@ -204,10 +150,6 @@ export default function Footer({ onApplyClick }) {
                 <a href="mailto:contact@initiativevalue.com" className="footer_btn secondary">
                   <span>contact@initiativevalue.com</span>
                 </a>
-
-                <button type="button" className="footer_btn secondary" onClick={exportLeadsCsv}>
-                  <span>Export Excel (CSV)</span>
-                </button>
               </div>
             </form>
           </div>
