@@ -70,7 +70,6 @@ function App() {
         <Quote />
         <Investors />
         <CTA onApplyClick={() => setIsModalOpen(true)} />
-        <Events />
         <Lantern />
         <FAQ />
         <Footer onApplyClick={() => setIsModalOpen(true)} />

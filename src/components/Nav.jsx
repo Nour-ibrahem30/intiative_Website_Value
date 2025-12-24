@@ -30,9 +30,10 @@ export default function Nav({ onApplyClick }) {
 
   const navLinks = useMemo(
     () => [
-      { id: 'section-features', label: 'Services' },
-      { id: 'section-faq', label: 'About' },
-      { id: 'contact-form', label: 'Contact' }
+      { id: 'section-features', label: 'Initiative' },
+      { id: 'section-faq', label: 'Benefits' },
+      { id: 'contact-form', label: 'Apply' },
+      { a: 'https://valueims.com/', label: 'Value' }
     ],
     []
   );
@@ -97,17 +98,35 @@ export default function Nav({ onApplyClick }) {
           
           <div id="nav-menu" className={`nav_menu ${menuOpen ? 'active' : ''}`}>
             <div className="nav_links_wrapper">
-              {navLinks.map((link) => (
-                <a
-                  key={link.id}
-                  href={`#${link.id}`}
-                  className={`nav-link ${activeSection === link.id ? 'active' : ''}`}
-                  aria-current={activeSection === link.id ? 'page' : undefined}
-                  onClick={(event) => handleNavClick(event, link.id)}
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const key = link.id || link.a;
+                if (link.a) {
+                  return (
+                    <a
+                      key={key}
+                      href={link.a}
+                      className="nav-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {link.label}
+                    </a>
+                  );
+                }
+
+                return (
+                  <a
+                    key={key}
+                    href={`#${link.id}`}
+                    className={`nav-link ${activeSection === link.id ? 'active' : ''}`}
+                    aria-current={activeSection === link.id ? 'page' : undefined}
+                    onClick={(event) => handleNavClick(event, link.id)}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
             </div>
             <button
               type="button"

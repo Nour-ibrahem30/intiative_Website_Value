@@ -38,9 +38,7 @@ export default function Quote() {
             </div>
             
             <p className={`quote_text ${isVisible ? 'visible' : ''}`}>
-              "Working with Initiative Value transformed our entire marketing approach. 
-              Within 3 months, we saw a 150% increase in qualified leads and our brand awareness skyrocketed. 
-              Their team truly understands how to deliver value and drive real results."
+              "The Value Marketing team combines creativity, strategic planning, and expertise to ensure every project reaches its maximum potential."
             </p>
             
             <div className={`quote_author ${isVisible ? 'visible' : ''}`}>

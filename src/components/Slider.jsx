@@ -7,12 +7,10 @@ export default function Slider() {
   const sectionRef = useRef(null);
   
   const slides = [
-    "Phishing, info-stealers, social engineering… One way or another, some credentials will always leak.",
-    "Once in possession, attackers map the target's internet-exposed assets and quickly test the stolen credentials across them.",
-    "MokN deploys defensive phishing pages with valid certs, ultra realistic behavior, and domains crafted to blend into the attack surface.",
-    "When attackers try to use stolen credentials on the Bait, they're met with a \"login failed\" response.",
-    "Behind the scenes, MokN agents check the credentials in real time, and valid ones instantly trigger a critical alert.",
-    "The password is reset within minutes, stopping the attack early and providing immediate, actionable intelligence on the attackers."
+    "Digital presents with owned media.",
+    "Different Channels to communicate with your customers.",
+    "Building Branding For your Startup.",
+    "Sales Growth."
   ];
 
   useEffect(() => {

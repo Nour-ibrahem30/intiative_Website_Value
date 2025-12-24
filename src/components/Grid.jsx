@@ -7,17 +7,10 @@ export default function Grid() {
   const sectionRef = useRef(null);
 
   const stats = [
-    { number: 1000000000, suffix: "+", label: "Processed login attempts." },
-    { number: 300, suffix: "+", label: "Compromised credentials unknown from the dark web." },
-    { number: 960000, suffix: "+", label: "Users protected" }
+    { number: 72, label: "creatives" },
+    { number: 6, label: "consultation" },
+    { number: 5, label: "Digital Platforms" }
   ];
-
-  const formatNumber = (num) => {
-    if (num >= 1000000000) return (num / 1000000000).toFixed(0) + 'B';
-    if (num >= 1000000) return (num / 1000000).toFixed(0) + 'k';
-    if (num >= 1000) return (num / 1000).toFixed(0) + 'k';
-    return num.toString();
-  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -29,31 +22,25 @@ export default function Grid() {
       { threshold: 0.3 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, [isVisible]);
 
   useEffect(() => {
     if (!isVisible) return;
-
-    const duration = 2000;
+    const duration = 1500;
     const steps = 60;
     const interval = duration / steps;
-
     let step = 0;
+
     const timer = setInterval(() => {
       step++;
       const progress = Math.min(step / steps, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
 
-      setCounts(stats.map(stat => Math.round(stat.number * eased)));
+      setCounts(stats.map(s => Math.round(s.number * eased)));
 
-      if (step >= steps) {
-        clearInterval(timer);
-      }
+      if (step >= steps) clearInterval(timer);
     }, interval);
 
     return () => clearInterval(timer);
@@ -66,9 +53,9 @@ export default function Grid() {
         <div className="container-1280">
           <div className="grid_wrapper">
             <div className={`grid_title ${isVisible ? 'visible' : ''}`}>
-              <h2>Why MokN?</h2>
+              <h2>Why value?</h2>
             </div>
-            
+
             <div className="stats_grid">
               {stats.map((stat, index) => (
                 <div className={`stat_item ${isVisible ? 'visible' : ''}`} key={index}>
@@ -77,7 +64,7 @@ export default function Grid() {
                   <div className="corner_dot bottom-left"></div>
                   <div className="corner_dot bottom-right"></div>
                   <div className="stat_number">
-                    {formatNumber(counts[index])}{stat.suffix}
+                    {counts[index]}
                   </div>
                   <div className="stat_label">{stat.label}</div>
                 </div>
