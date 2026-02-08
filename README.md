@@ -35,9 +35,7 @@ Or, simply open index.html in your browser if it's a static project.
 
 📋 Technologies Used
 HTML
-
 CSS
-
 JavaScript
 
 Add any additional libraries or frameworks if used.
@@ -60,6 +58,7 @@ Lightweight and easy to extend
 └── README.md
 📸 Screenshots (Optional)
 Add screenshots of the website here to showcase its design — highly recommended for portfolios.
+<img width="1920" height="973" alt="Value Compeny" src="https://github.com/user-attachments/assets/98781f89-f142-41a8-af12-64f2e1c830a4" />
 
 🤝 Contributing
 If you want to contribute:
@@ -81,5 +80,3 @@ Check out more projects on my GitHub
 
 
 ---
-حب أعملها لك؟
-
